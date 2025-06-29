@@ -10,6 +10,40 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required parameters" }, { status: 400 })
     }
 
+    // --------------------------------------------------------------------
+    // DEMO SHORT-CIRCUIT
+    // --------------------------------------------------------------------
+    if (merchant_domain === "demo-store" || merchant_domain === "demo-store.myshopify.com") {
+      return NextResponse.json({
+        order: {
+          id: "demo-order-id",
+          order_number: "12345",
+          email: "customer@example.com",
+          total_price: "89.97",
+          line_items: [
+            {
+              id: "item_1",
+              product_id: "prod_123",
+              variant_id: "var_123_m_blue",
+              title: "Premium Cotton T-Shirt",
+              variant_title: "Size M / Blue",
+              quantity: 1,
+              price: "29.99",
+            },
+            {
+              id: "item_2",
+              product_id: "prod_456",
+              variant_id: "var_456_32_dark",
+              title: "Denim Jeans",
+              variant_title: "Size 32 / Dark Wash",
+              quantity: 1,
+              price: "59.99",
+            },
+          ],
+        },
+      })
+    }
+
     // Get merchant data
     const merchant = await dataService.getMerchantByDomain(merchant_domain)
     if (!merchant) {
